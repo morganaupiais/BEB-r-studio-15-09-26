@@ -5,11 +5,25 @@ output: github_document
 
 
 
-```{r}
 install.packages(sampling)
-```
+??sampling pour avoir les infos du package
+Important d'enlever régulièrement des graphiques (mémoire)
 
 ```{r}
 library(sampling)
+
+
+
+
+
+
+
+
+
+
 ```
+
+
+
+
 
