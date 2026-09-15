@@ -1,0 +1,15 @@
+---
+title: "cours 1 BEB"
+output: github_document
+---
+
+
+
+```{r}
+install.packages(sampling)
+```
+
+```{r}
+library(sampling)
+```
+
