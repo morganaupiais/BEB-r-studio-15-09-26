@@ -17,11 +17,41 @@ library(dplyr)
 ```
 
 ```{r}
+A <- 28.76
+typeof(A)
+B <- 28
+typeof(B)
+C <- as.integer(A)
+typeof(C)
 
+fB <- factor(B)
+print(B)
+typeof(fB)
+class(fB)
+```
+```{r}
+data_results = read.csv(file = "resultat.csv",header = TRUE)
 
+data_matrix <- data_results %>% select(- 'Essay')
+data_matrixf = as.matrix(data_matrix)
+
+dim(data_results) #nb lignes * colonnes?
+varS <- data_results$T
+data6 <- data_results[6,]
+datr <- data_results[0:5,] %>% select(-one_of('S', 'T'))
 
 ```
 
+```{r}
+data_modif1 <- data_results$S / sd(data_matrixf)
 
+data_results$S <-  data_modif1
+
+#9
+
+seq = rep(1:15, length.out = 20)
+seq_r = cumsum(c(1, rep(14/19, 19)))
+
+```
 
 
