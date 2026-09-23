@@ -1,5 +1,5 @@
 ---
-title: "cours 1 BEB"
+title: "cours 2 BEB"
 output: github_document
 ---
 
@@ -11,18 +11,16 @@ Important d'enlever régulièrement des graphiques (mémoire)
 
 ```{r}
 library(sampling)
+library(ggplot2)
+library(viridis)
+library(dplyr)
+```
 
-
-
-
-
-
-
+```{r}
 
 
 
 ```
-
 
 
 
