@@ -1,0 +1,109 @@
+---
+title: "Exp Phys Exercice"
+author: "Prenom NOM"
+date: "`23/09/2026`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Enoncé
+
+Pour l'exercice suivant, utiliser les fonctions R suivantes: 
+
+sample()
+replicate()
+
+C'est un contexte expérimental ; simuler les expériences et afficher les résultats bruts de celles-ci. 
+
+## Problème:
+
+Un instrument (émetteur-récepteur) envoie un son sur une paroi et mesure le temps de parcours, jusqu'au retour de ce son.
+
+La paroi est placée initialement à une distance entre 4 et 2 mètre (aléatoirement avec une résolution de 10 cm) et avance vers l'instrument de 10 cm toutes les minutes. Il faudrait que l'expérience (per se) se termine quand la paroi se trouve à 50 cm de l'instrument de mesure.
+
+Dans l'intervalle des minutes, vous faites un lancer d'une pièce équilibrée et quand la pièce retombe sur "face", vous faites une mesure de temps de parcours. 
+
+
+```{r}
+distance_poss = seq(2,4, by = 0.1)
+
+dist = sample(distance_poss, 1, replace = FALSE)
+distance_20 = replicate(n=20, sample(distance_poss, 1,replace = FALSE))
+mesure_dist = 999
+sample_alea = c(TRUE,FALSE)
+minutes = 0
+nb_mesures = 0
+
+#1ere idée avec une boucle, on simule avec n=20 : 
+
+while (mesure_dist > 0.5) {
+  dist = dist - 0.1
+  print(dist)
+  sample_var = sample(sample_alea,1,replace = FALSE)
+  if (sample_var == TRUE) {mesure_dist = dist
+  nb_mesures = nb_mesures + 1}
+  minutes = minutes + 1
+  print(sample_var)
+}
+print(nb_mesures)
+print("fin de l_experience")
+
+```
+
+```{r}
+#On fait la fonction
+
+miroir_miroir <- function(dist, minutes, mesure_dist, sample_alea, nb_mesures) {
+  # instructions à exécuter
+  while (mesure_dist > 0.5) {
+  dist = dist - 0.1
+  print(dist)
+  sample_var = sample(sample_alea,1,replace = FALSE)
+  if (sample_var == TRUE) {mesure_dist = dist
+  nb_mesures = nb_mesures + 1}
+  minutes = minutes + 1
+  print(sample_var)
+  }
+  print(nb_mesures)
+  print("fin de l_experience")
+  resultat <- nb_mesures
+  return(resultat)         # valeur renvoyée
+}
+
+```
+
+
+```{r}
+#On utilise la fonction
+
+print(replicate)
+
+
+
+```
+
+
+## Questions:
+
+### 1. Listez les variables de votre problème, et caractérisez-les
+
+distance_possibilité : liste de distance (double) entre 2 et 4m avec un pas de 0.1m
+distance : selection initiale de la distance -> selection aléatoire dans la liste distance_possibilité (double)
+On réduit distance de 0.1m à chaque pas de temps (un pas de temps = 1 min)
+minutes : 
+
+
+
+### 2. Combien de mesure(s) allez-vous effectuer sur la totalité d'une expérience (constant, variable, comment) ?
+
+
+
+
+
+### 3. Si vous faites 30 fois l'expérience, combien de fois pourrez-vous arreter l'expérience dans les conditions désirées (quel pourcentage ceci représente-t'il) ?
+
+### 4. Par précaution, vous souhaiteriez arrêter l'expérience quand l'objectif est rempli, mais avant que la paroi ne touche l'instrument : est-ce toujours possible de faire ceci?
+
