@@ -56,7 +56,13 @@ print("fin de l_experience")
 ```{r}
 #On fait la fonction
 
-miroir_miroir <- function(dist, minutes, mesure_dist, sample_alea, nb_mesures) {
+miroir_miroir <- function(distance_poss) {
+  #mise a jour des variables
+  dist = sample(distance_poss, 1, replace = FALSE)
+  minutes = 0
+  nb_mesures = 0
+  mesure_dist = 999
+  sample_alea = c(TRUE,FALSE)
   # instructions à exécuter
   while (mesure_dist > 0.5) {
   dist = dist - 0.1
@@ -79,8 +85,8 @@ miroir_miroir <- function(dist, minutes, mesure_dist, sample_alea, nb_mesures) {
 ```{r}
 #On utilise la fonction
 
-print(replicate)
-
+print(replicate(30,miroir_miroir(distance_poss)))
+array_finish = replicate(30,miroir_miroir(distance_poss))
 
 
 ```
