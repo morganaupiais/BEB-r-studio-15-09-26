@@ -61,14 +61,13 @@ miroir_miroir <- function(distance_poss) {
   dist = sample(distance_poss, 1, replace = FALSE)
   minutes = 0
   nb_mesures = 0
-  mesure_dist = 999
   sample_alea = c(TRUE,FALSE)
   # instructions à exécuter
-  while (mesure_dist > 0.5) {
+  while (dist > 0.5) {
   dist = dist - 0.1
   print(dist)
   sample_var = sample(sample_alea,1,replace = FALSE)
-  if (sample_var == TRUE) {mesure_dist = dist
+  if (sample_var == TRUE) {
   nb_mesures = nb_mesures + 1}
   minutes = minutes + 1
   print(sample_var)
