@@ -1,8 +1,8 @@
 ---
-title: "Exp Phys Exercice"
-author: "Prenom NOM"
+title: "Exp Phys correction Exercice"
+author: "Morgan Aupiais"
 date: "`23/09/2026`"
-output: pdf_document
+output: github document
 ---
 
 ```{r setup, include=FALSE}
@@ -93,6 +93,69 @@ hist(array_finish)
 boxplot(array_finish)
 ```
 
+```{r}
+#Fonction correction
+
+expérience = function() {
+  
+  dist_cm_0 <- 200 + floor(runif(n = 1, min = 0, max =(1 + (400 - 200) / 10 ))) * 10
+  #runif : générateur de nombre aléatoire, multiplié par 10 pour retrouver la distance
+  nb_mes <- 0 #nombre total de mesure
+  arret_obj <- FALSE #pour l'instant on les observations continuent : set to FALSE
+  dist_stop <- NA #distance de l'arret de l'objectif : set to NA
+  dist_cm_t <- dist_cm_0 # 
+  temps_ms <- 0 #mesure du temps
+  
+  while(dist_cm_t > 0){ #On veut arréter la boucle seulement si la distance de la paroi n'est pas >0
+    dist_cm_t = dist_cm_t - 10 #On se rapproche de 10cm à chaque pas de temps
+    piece <- sample(c("face","pile"),1,prob = c(0.5,0.5)) #Tirage à pile ou face 
+    
+    if (piece == "face"){  #
+      
+      nb_mes <- nb_mes + 1 #ajout d'une mesure quand on tombe sur face
+      temps_s <- (2 * dist_cm_t)/34000 #mesure du temps du signal en seconde (facultatif)
+      
+      if (dist_cm_t == 50){ #mesures uniquement quand pièce tombe sur face, ici si distance égale à 50 :
+        arret_obj <- TRUE #on a rempli notre objectif, cette variable devient donc TRUE
+        dist_stop <- dist_cm_t
+        break #termine les boucles
+        
+      }
+     if (dist_cm_t < 50){ #boucle de secours, on évite un choc detructeur entre objectif et paroi
+       arret_obj <- FALSE # objectif non-remplis
+       dist_stop <- dist_cm_t
+       break #termine les boucles
+       
+     }
+       
+      
+    }
+    
+    
+  }#Fin de while
+  
+  
+  return(list(arret_obj = arret_obj, nb_mes = nb_mes, dist_stop = dist_stop)) #On doit rappeler les fonction ici, on utilise les mêmes nom par simplification
+}
+```
+
+```{r}
+res1exp <- expérience()
+
+array_finish = replicate(10000,expérience(), simplify = FALSE) # On replique 10 000 fois l'expérience, en précisant un array en sortie
+
+```
+
+```{r}
+hst_nbm <- sapply(array_finish,function(X) X$nb_mes)
+hist(hst_nbm, breaks = "sturges", freq = FALSE) #on crée l'histogramme avec la méthode "sturges", en utilisant les fréquences plutôt que les masses
+
+
+```
+
+
+
+
 
 
 
@@ -103,17 +166,38 @@ boxplot(array_finish)
 distance_possibilité : liste de distance (double) entre 2 et 4m avec un pas de 0.1m
 distance : selection initiale de la distance -> selection aléatoire dans la liste distance_possibilité (double)
 On réduit distance de 0.1m à chaque pas de temps (un pas de temps = 1 min)
-minutes : 
+minutes :
+
+
+correction : 
+
+dist_cm_0 (int), numeric-> Contient la distance de départ
+nb_mes (int), numeric -> nombre total de mesures
+arret_obj (bool), logical -> set to TRUE tant que les observations continus
+dist_stop (int), numeric -> distance d'arret de l'expérience
+dist_cm_t (int), numeric -> distance en centimetre actuelle de l'objectif
+temps_s (int), numeric -> mesure du temps en seconde
+
+
 
 
 
 ### 2. Combien de mesure(s) allez-vous effectuer sur la totalité d'une expérience (constant, variable, comment) ?
 
 
+Le nombre de mesures est variables, il dépend du nombre de face sur la pièce et de la distance initiale, plus la distance est élevée plus le nombre de mesure effectuées va être globalement élevée.
+Sur 10000 replica, le nombre de mesures moyen est de 12.90, avec une variance de 15.03.
 
 
 
 ### 3. Si vous faites 30 fois l'expérience, combien de fois pourrez-vous arreter l'expérience dans les conditions désirées (quel pourcentage ceci représente-t'il) ?
 
+On a environ 0.5 en proportion (expérience reussi/ expérience non réussi), sur 1000 essais.
+
+
 ### 4. Par précaution, vous souhaiteriez arrêter l'expérience quand l'objectif est rempli, mais avant que la paroi ne touche l'instrument : est-ce toujours possible de faire ceci?
+
+
+
+
 
