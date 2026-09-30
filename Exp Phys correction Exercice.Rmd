@@ -151,12 +151,8 @@ hst_nbm <- sapply(array_finish,function(X) X$nb_mes)
 hist(hst_nbm, breaks = "sturges", freq = FALSE) #on crée l'histogramme avec la méthode "sturges", en utilisant les fréquences plutôt que les masses
 
 
+
 ```
-
-
-
-
-
 
 
 ## Questions:
@@ -187,12 +183,31 @@ temps_s (int), numeric -> mesure du temps en seconde
 
 Le nombre de mesures est variables, il dépend du nombre de face sur la pièce et de la distance initiale, plus la distance est élevée plus le nombre de mesure effectuées va être globalement élevée.
 Sur 10000 replica, le nombre de mesures moyen est de 12.90, avec une variance de 15.03.
+Elle ne suis pas vraiment une loi normale mais posssède tout de même une valeur centrale.
+
 
 
 
 ### 3. Si vous faites 30 fois l'expérience, combien de fois pourrez-vous arreter l'expérience dans les conditions désirées (quel pourcentage ceci représente-t'il) ?
 
-On a environ 0.5 en proportion (expérience reussi/ expérience non réussi), sur 1000 essais.
+
+```{r}
+n_sim <- 1002
+results_true <- c(0)
+compte_total = 0
+vec_prop = rep(0, n_sim)
+
+for (i in 1:n_sim) {
+  results_sim <- replicate(30, expérience(), simplify = FALSE)
+  val_obj = sapply(results_sim, function(x) x$arret_obj)
+  prop = length(val_obj[val_obj == TRUE])/30
+  vec_prop[i] = prop
+}
+
+hist(vec_prop)
+
+
+```
 
 
 ### 4. Par précaution, vous souhaiteriez arrêter l'expérience quand l'objectif est rempli, mais avant que la paroi ne touche l'instrument : est-ce toujours possible de faire ceci?
