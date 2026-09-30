@@ -27,74 +27,10 @@ La paroi est placée initialement à une distance entre 4 et 2 mètre (aléatoir
 Dans l'intervalle des minutes, vous faites un lancer d'une pièce équilibrée et quand la pièce retombe sur "face", vous faites une mesure de temps de parcours. 
 
 
-```{r}
-distance_poss = seq(2,4, by = 0.1)
-
-dist = sample(distance_poss, 1, replace = FALSE)
-distance_20 = replicate(n=20, sample(distance_poss, 1,replace = FALSE))
-mesure_dist = 999
-sample_alea = c(TRUE,FALSE)
-minutes = 0
-nb_mesures = 0
-
-#1ere idée avec une boucle, on simule avec n=20 : 
-
-while (mesure_dist > 0.5) {
-  dist = dist - 0.1
-  print(dist)
-  sample_var = sample(sample_alea,1,replace = FALSE)
-  if (sample_var == TRUE) {mesure_dist = dist
-  nb_mesures = nb_mesures + 1}
-  minutes = minutes + 1
-  print(sample_var)
-}
-print(nb_mesures)
-print("fin de l_experience")
-
-```
-
-```{r}
-#On fait la fonction
-
-miroir_miroir <- function(distance_poss) {
-  #mise a jour des variables
-  dist = sample(distance_poss, 1, replace = FALSE)
-  minutes = 0
-  nb_mesures = 0
-  sample_alea = c(TRUE,FALSE)
-  # instructions à exécuter
-  while (dist > 0.5) {
-  dist = dist - 0.1
-  print(dist)
-  sample_var = sample(sample_alea,1,replace = FALSE)
-  if (sample_var == TRUE) {
-  nb_mesures = nb_mesures + 1}
-  minutes = minutes + 1
-  print(sample_var)
-  }
-  print(nb_mesures)
-  print("fin de l_experience")
-  resultat <- nb_mesures
-  return(resultat)         # valeur renvoyée
-}
-
-```
 
 
 ```{r}
-#On utilise la fonction
-
-print(replicate(30,miroir_miroir(distance_poss)))
-array_finish = replicate(30,miroir_miroir(distance_poss))
-```
-
-```{r}
-hist(array_finish)
-boxplot(array_finish)
-```
-
-```{r}
-#Fonction correction
+#Fonction écriture
 
 expérience = function() {
   
@@ -162,10 +98,9 @@ hist(hst_nbm, breaks = "sturges", freq = FALSE) #on crée l'histogramme avec la 
 distance_possibilité : liste de distance (double) entre 2 et 4m avec un pas de 0.1m
 distance : selection initiale de la distance -> selection aléatoire dans la liste distance_possibilité (double)
 On réduit distance de 0.1m à chaque pas de temps (un pas de temps = 1 min)
-minutes :
 
 
-correction : 
+Variables : 
 
 dist_cm_0 (int), numeric-> Contient la distance de départ
 nb_mes (int), numeric -> nombre total de mesures
@@ -191,26 +126,59 @@ Elle ne suis pas vraiment une loi normale mais posssède tout de même une valeu
 ### 3. Si vous faites 30 fois l'expérience, combien de fois pourrez-vous arreter l'expérience dans les conditions désirées (quel pourcentage ceci représente-t'il) ?
 
 
+
+
+Proportion entre 0.1 et 0.8, la majorité des essais ce situent entre 0.4 et 0.6. La distribution ne suit pas un loi normale, il n'y a pas de pic fixe. Pas de modalité claire.
+
+
+
 ```{r}
 n_sim <- 1002
 results_true <- c(0)
 compte_total = 0
-vec_prop = rep(0, n_sim)
+vec_prop = rep(0, n_sim)#création d'un vecteur vide
 
-for (i in 1:n_sim) {
-  results_sim <- replicate(30, expérience(), simplify = FALSE)
-  val_obj = sapply(results_sim, function(x) x$arret_obj)
-  prop = length(val_obj[val_obj == TRUE])/30
-  vec_prop[i] = prop
+for (i in 1:n_sim) { # Boucle for, on va avoir i itération de 1 à n_sim = 1002
+  results_sim <- replicate(30, expérience(), simplify = FALSE) ##simplify structure les résultats dans un vecteur, si on met false les résultat sortent dans la structure et on les recupère de manière brut
+  val_obj = sapply(results_sim, function(x) x$arret_obj) #On récupère les valeur de arret_obj dans un vecteur
+  prop = length(val_obj[val_obj == TRUE])/30 #On regarde la proportion du vecteur dont val_obj == TRUE
+  vec_prop[i] = prop #On ajoute la proportion de cette itération i dans le vecteur global vec_prop
 }
 
-hist(vec_prop)
+hist(vec_prop, main = "repartition", col = "green")
 
 
 ```
 
 
 ### 4. Par précaution, vous souhaiteriez arrêter l'expérience quand l'objectif est rempli, mais avant que la paroi ne touche l'instrument : est-ce toujours possible de faire ceci?
+
+Il y a toujours une petite portion des valeurs pour laquelle la distance d'arret n'est pas >0 (au minimum 0.89%). Dans ce cas il y a toujours un faible pourcentage de chance dans laquelle la paroi touche l'instrument
+
+
+```{r}
+
+n_sim <- 1000 #On replique la même structure que précédement, en modifiant la variable prélevée (ici dist_stop)
+
+results_stop <- c(0)
+compte_total = 0
+vec_dist = rep(0, n_sim)
+
+for (i in 1:n_sim) {
+  results_sim <- replicate(30, expérience(), simplify = FALSE)
+  val_dist = sapply(results_sim, function(x) x$dist_stop)
+  dist_tot = length(val_dist[val_dist > 0])/30
+  vec_dist[i] = dist_tot
+}
+
+hist(vec_dist, main = "repartition distances", col = "green")
+
+
+
+
+```
+
+
 
 
 
